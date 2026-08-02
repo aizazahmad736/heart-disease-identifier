@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardioAI | Advanced Heart Disease Risk Identifier</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (via devicon / cdnjs or ESM) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="glass-bg"></div>
+    <div class="app-container">
+        <!-- Sidebar / Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i data-lucide="activity" class="brand-icon"></i>
+                <div class="brand-text">
+                    <h1>Cardio<span>AI</span></h1>
+                    <p>Clinical Intelligence Engine</p>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#dashboard" class="nav-item active" id="nav-dash">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#assessment" class="nav-item" id="nav-assess">
+                    <i data-lucide="heart-pulse"></i>
+                    <span>Risk Calculator</span>
+                </a>
+                <a href="#about" class="nav-item" id="nav-info">
+                    <i data-lucide="info"></i>
+                    <span>Clinical Metrics</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="model-badge">
+                    <div class="pulse-indicator"></div>
+                    <div>
+                        <span class="badge-title">ML Model Active</span>
+                        <span class="badge-desc">Logistic Regression (Acc: <span id="acc-metric">85.2</span>%)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="welcome">
+                    <h2>Heart Disease Risk Identifier</h2>
+                    <p>Interactive Machine Learning Diagnostic Assistance System</p>
+                </div>
+                <div class="status-indicator">
+                    <i data-lucide="shield-check"></i>
+                    <span>HIPAA Compliant Simulator</span>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <section id="dashboard-tab" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper red">
+                            <i data-lucide="heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Assessments</h3>
+                            <p class="stat-value" id="total-assessments">0</p>
+                            <span class="stat-trend">Total runs in session</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper yellow">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Alerts Triggered</h3>
+                            <p class="stat-value" id="alerts-triggered">0</p>
+                            <span class="stat-trend">High-risk cases detected</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper green">
+                            <i data-lucide="shield"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Model Accuracy</h3>
+                            <p class="stat-value" id="accuracy-display">--%</p>
+                            <span class="stat-trend">Standardized UCI Dataset</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-layout">
+                    <!-- Main Hero / Call to action -->
+                    <div class="card hero-card">
+                        <div class="hero-content">
+                            <h3>Ready for a Cardiac Risk Evaluation?</h3>
+                            <p>Input clinical test parameters, physiological readings, and symptoms to compute the diagnostic probability of cardiovascular disease using our trained ML estimator.</p>
+                            <button class="btn btn-primary" onclick="switchTab('assessment')">
+                                <i data-lucide="play-circle"></i>
+                                Start New Assessment
+                            </button>
+                        </div>
+                        <div class="hero-illustration">
+                            <i data-lucide="heart-handshake" class="large-hero-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Recent Results List -->
+                    <div class="card recent-card">
+                        <h3>Recent Assessments</h3>
+                        <div class="recent-list" id="recent-list">
+                            <div class="empty-state">
+                                <i data-lucide="folder-open"></i>
+                                <p>No assessments run yet. Complete the risk calculator to populate results.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assessment Tab -->
+            <section id="assessment-tab" class="tab-content">
+                <div class="calculator-layout">
+                    <!-- Form Card -->
+                    <div class="card form-card">
+                        <div class="form-header">
+                            <h3>Patient Clinical Profile</h3>
+                            <span class="step-indicator">Complete all fields</span>
+                        </div>
+                        
+                        <form id="risk-form" onsubmit="calculateRisk(event)">
+                            <div class="form-section-title">1. Patient Demographics & Vitals</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="age">Age (years)</label>
+                                    <input type="number" id="age" required min="1" max="120" placeholder="e.g., 52" value="52">
+                                </div>
+                                <div class="form-group">
+                                    <label for="sex">Biological Sex</label>
+                                    <select id="sex" required>
+                                        <option value="1">Male</option>
+                                        <option value="0">Female</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="trestbps">Resting Blood Pressure (mm Hg)</label>
+                                    <input type="number" id="trestbps" required min="80" max="220" placeholder="e.g., 125" value="125">
+                                </div>
+                                <div class="form-group">
+                                    <label for="chol">Serum Cholesterol (mg/dl)</label>
+                                    <input type="number" id="chol" required min="100" max="600" placeholder="e.g., 212" value="212">
+                                </div>
+                            </div>
+
+                            <div class="form-section-title">2. Symptoms & Laboratory Findings</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="cp">Chest Pain Type (CP)</label>
+                                    <select id="cp" required>
+                                        <option value="0">Asymptomatic (Type 0)</option>
+                                        <option value="1">Typical Angina (Type 1)</option>
+                                        <option value="2">Atypical Angina (Type 2)</option>
+                                        <option value="3">Non-Anginal Pain (Type 3)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fbs">Fasting Blood Sugar > 120 mg/dl</label>
+                                    <select id="fbs" required>
+                                        <option value="0">No (<= 120 mg/dl)</option>
+                                        <option value="1">Yes (> 120 mg/dl)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="restecg">Resting ECG Results</label>
+                                    <select id="restecg" required>
+                                        <option value="0">Normal (0)</option>
+                                        <option value="1">ST-T Wave Abnormality (1)</option>
+                                        <option value="2">Left Ventricular Hypertrophy (2)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="thalach">Max Heart Rate Achieved (bpm)</label>
+                                    <input type="number" id="thalach" required min="60" max="220" placeholder="e.g., 168" value="168">
+                                </div>
+                            </div>
+
+                            <div class="form-section-title">3. Stress Test & Cardiac Diagnostics</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="exang">Exercise Induced Angina</label>
+                                    <select id="exang" required>
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="oldpeak">ST Depression (Oldpeak)</label>
+                                    <input type="number" id="oldpeak" step="0.1" required min="0" max="10" placeholder="e.g., 1.0" value="1.0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="slope">Slope of Peak Exercise ST</label>
+                                    <select id="slope" required>
+                                        <option value="2">Downsloping / Normal (2)</option>
+                                        <option value="1">Flat (1)</option>
+                                        <option value="0">Upsloping (0)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ca">Number of Major Vessels (0-4)</label>
+                                    <input type="number" id="ca" required min="0" max="4" placeholder="e.g., 0" value="0">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="thal">Thalassemia Type</label>
+                                    <select id="thal" required>
+                                        <option value="2">Normal (2)</option>
+                                        <option value="1">Fixed Defect (1)</option>
+                                        <option value="3">Reversable Defect (3)</option>
+                                        <option value="0">Unknown (0)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                    <i data-lucide="refresh-cw"></i> Reset Form
+                                </button>
+                                <button type="submit" class="btn btn-primary btn-submit">
+                                    <i data-lucide="brain-circuit"></i> Compute Risk Score
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Result Panel (initially hidden or in default state) -->
+                    <div class="card result-card" id="result-panel">
+                        <div class="result-placeholder" id="result-placeholder">
+                            <i data-lucide="activity" class="pulse-icon"></i>
+                            <h4>Diagnostic Diagnostics Panel</h4>
+                            <p>Fill out the profile and compute target risks to visualize evaluation diagnostics here.</p>
+                        </div>
+
+                        <div class="result-display d-none" id="result-display">
+                            <div class="result-header">
+                                <h3>Assessment Result</h3>
+                                <span class="badge" id="risk-badge">Low Risk</span>
+                            </div>
+
+                            <div class="gauge-container">
+                                <div class="percentage-display">
+                                    <span class="value" id="risk-percentage">0%</span>
+                                    <span class="label">Probability of Disease</span>
+                                </div>
+                                <div class="gauge-bar-outer">
+                                    <div class="gauge-bar-inner" id="gauge-fill"></div>
+                                </div>
+                            </div>
+
+                            <div class="interpretation-box" id="interpretation-box">
+                                <h4 id="interpretation-title">Normal Probability</h4>
+                                <p id="interpretation-text">Clinical indicators suggest a low likelihood of coronary artery disease. Continue regular health screenings.</p>
+                            </div>
+
+                            <div class="visualization-title">Feature Contribution Analysis</div>
+                            <div class="chart-container">
+                                <canvas id="featureChart"></canvas>
+                            </div>
+
+                            <div class="card-action-bar">
+                                <button class="btn btn-secondary btn-full" onclick="printAssessment()">
+                                    <i data-lucide="printer"></i> Export PDF Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About / Clinical Metrics Tab -->
+            <section id="about-tab" class="tab-content">
+                <div class="card info-card">
+                    <h3>ML Model Performance Details</h3>
+                    <p>The prediction module utilizes a Logistic Regression classifier trained on the standardized UCI Cleveland dataset containing patient clinical outcomes.</p>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-box">
+                            <span class="metric-num" id="metric-acc">--</span>
+                            <span class="metric-label">Model Accuracy</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-num" id="metric-auc">--</span>
+                            <span class="metric-label">ROC AUC Score</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-num" id="metric-precision">--</span>
+                            <span class="metric-label">Precision</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-num" id="metric-recall">--</span>
+                            <span class="metric-label">Recall / Sensitivity</span>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 2rem; margin-bottom: 0.75rem;">Feature Coefficients (Feature Importance)</h4>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">Features with positive coefficients increase predicted disease risk, while negative coefficients decrease the risk score.</p>
+                    
+                    <div class="table-container">
+                        <table class="metrics-table">
+                            <thead>
+                                <tr>
+                                    <th>Feature Name</th>
+                                    <th>Clinical Code</th>
+                                    <th>Description</th>
+                                    <th>Model Coefficient</th>
+                                    <th>Risk Correlation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="coefficients-table-body">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script imports -->
+    <script src="app.js"></script>
+</body>
+</html>
