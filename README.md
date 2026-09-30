@@ -8,6 +8,7 @@ CardioAI is an interactive machine learning dashboard that predicts heart diseas
 
 <img width="564" height="366" alt="image" src="https://github.com/user-attachments/assets/f54a9536-b858-4d6d-a019-62eee791d0f2" />
 
+<img width="535" height="443" alt="image" src="https://github.com/user-attachments/assets/83d5c2d2-7cc8-41bd-9191-9fc46f6e2e80" />
 
 ## Architecture
 
