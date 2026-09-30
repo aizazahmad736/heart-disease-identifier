@@ -6,6 +6,7 @@ CardioAI is an interactive machine learning dashboard that predicts heart diseas
 
 <img width="574" height="398" alt="image" src="https://github.com/user-attachments/assets/f954b305-9918-4389-a6b3-3cbece378561" />
 
+
 ## Architecture
 
 - **`train.py`**: A Python ML pipeline script. It downloads the UCI Cleveland dataset, handles preprocessing with standard scaling, trains a Scikit-Learn `LogisticRegression` classifier, evaluates the performance metrics, and exports normalized parameters to `model_assets.json`.
