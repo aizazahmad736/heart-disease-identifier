@@ -2,6 +2,8 @@
 
 CardioAI is an interactive machine learning dashboard that predicts heart disease probability based on clinical measurements using Logistic Regression trained on the UCI Heart Disease Dataset.
 
+<img width="583" height="413" alt="image" src="https://github.com/user-attachments/assets/d894333b-2fd4-4aa1-9d84-1ad30e622bd9" />
+
 ## Architecture
 
 - **`train.py`**: A Python ML pipeline script. It downloads the UCI Cleveland dataset, handles preprocessing with standard scaling, trains a Scikit-Learn `LogisticRegression` classifier, evaluates the performance metrics, and exports normalized parameters to `model_assets.json`.
