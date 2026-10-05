@@ -769,6 +769,16 @@ body {
     display: none !important;
 }
 
+.medical-disclaimer {
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(255, 179, 0, 0.35);
+    border-radius: 12px;
+    background: rgba(255, 179, 0, 0.08);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .calculator-layout {

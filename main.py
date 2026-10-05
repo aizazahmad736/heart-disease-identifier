@@ -26,19 +26,19 @@ with open(assets_path, "r") as f:
 
 # Pydantic schema for inputs
 class PatientProfile(BaseModel):
-    age: float = Field(..., description="Age in years")
-    sex: float = Field(..., description="1 = Male; 0 = Female")
-    cp: float = Field(..., description="Chest pain type (0-3)")
-    trestbps: float = Field(..., description="Resting blood pressure (mm Hg)")
-    chol: float = Field(..., description="Serum cholesterol (mg/dl)")
-    fbs: float = Field(..., description="Fasting blood sugar > 120 mg/dl (1 = true; 0 = false)")
-    restecg: float = Field(..., description="Resting ECG results (0-2)")
-    thalach: float = Field(..., description="Max heart rate achieved")
-    exang: float = Field(..., description="Exercise induced angina (1 = yes; 0 = no)")
-    oldpeak: float = Field(..., description="ST depression induced by exercise relative to rest")
-    slope: float = Field(..., description="Slope of peak exercise ST segment (0-2)")
-    ca: float = Field(..., description="Number of major vessels (0-4)")
-    thal: float = Field(..., description="Thalassemia type (0-3)")
+    age: int = Field(..., ge=1, le=120, description="Age in years")
+    sex: int = Field(..., ge=0, le=1, description="1 = Male; 0 = Female")
+    cp: int = Field(..., ge=0, le=3, description="Chest pain type (0-3)")
+    trestbps: float = Field(..., ge=80, le=220, description="Resting blood pressure (mm Hg)")
+    chol: float = Field(..., ge=100, le=600, description="Serum cholesterol (mg/dl)")
+    fbs: int = Field(..., ge=0, le=1, description="Fasting blood sugar > 120 mg/dl (1 = true; 0 = false)")
+    restecg: int = Field(..., ge=0, le=2, description="Resting ECG results (0-2)")
+    thalach: float = Field(..., ge=60, le=220, description="Max heart rate achieved")
+    exang: int = Field(..., ge=0, le=1, description="Exercise induced angina (1 = yes; 0 = no)")
+    oldpeak: float = Field(..., ge=0, le=10, description="ST depression induced by exercise relative to rest")
+    slope: int = Field(..., ge=0, le=2, description="Slope of peak exercise ST segment (0-2)")
+    ca: int = Field(..., ge=0, le=4, description="Number of major vessels (0-4)")
+    thal: int = Field(..., ge=0, le=3, description="Thalassemia type (0-3)")
 
 CLINICAL_LABELS = {
     "age": "Age",
@@ -71,7 +71,7 @@ def get_metrics():
 def predict(profile: PatientProfile):
     try:
         # Convert Pydantic object to dict
-        inputs = profile.dict()
+        inputs = profile.model_dump()
         
         # Calculate normalized features and contribution
         logit = MODEL_ASSETS["model"]["intercept"]
@@ -94,11 +94,6 @@ def predict(profile: PatientProfile):
             
             logit += contribution
             
-            contributions.push = {
-                "name": CLINICAL_LABELS[feat],
-                "value": float(contribution)
-            }
-            # Wait, Python list syntax is append, let's fix it
             contributions.append({
                 "name": CLINICAL_LABELS[feat],
                 "value": float(contribution)

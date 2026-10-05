@@ -23,7 +23,7 @@
                 <i data-lucide="activity" class="brand-icon"></i>
                 <div class="brand-text">
                     <h1>Cardio<span>AI</span></h1>
-                    <p>Clinical Intelligence Engine</p>
+                    <p>Educational ML Demo</p>
                 </div>
             </div>
             
@@ -46,8 +46,8 @@
                 <div class="model-badge">
                     <div class="pulse-indicator"></div>
                     <div>
-                        <span class="badge-title">ML Model Active</span>
-                        <span class="badge-desc">Logistic Regression (Acc: <span id="acc-metric">85.2</span>%)</span>
+                        <span class="badge-title">Model Demo</span>
+                        <span class="badge-desc">Logistic Regression (research use only)</span>
                     </div>
                 </div>
             </div>
@@ -59,11 +59,11 @@
             <header class="top-header">
                 <div class="welcome">
                     <h2>Heart Disease Risk Identifier</h2>
-                    <p>Interactive Machine Learning Diagnostic Assistance System</p>
+                    <p>Interactive Machine Learning Demonstration</p>
                 </div>
                 <div class="status-indicator">
                     <i data-lucide="shield-check"></i>
-                    <span>HIPAA Compliant Simulator</span>
+                    <span>Educational Demo — Not for Clinical Use</span>
                 </div>
             </header>
 
@@ -85,9 +85,9 @@
                             <i data-lucide="alert-triangle"></i>
                         </div>
                         <div class="stat-info">
-                            <h3>Alerts Triggered</h3>
+                            <h3>Higher Estimates</h3>
                             <p class="stat-value" id="alerts-triggered">0</p>
-                            <span class="stat-trend">High-risk cases detected</span>
+                            <span class="stat-trend">Demo estimates at or above 60%</span>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -106,8 +106,8 @@
                     <!-- Main Hero / Call to action -->
                     <div class="card hero-card">
                         <div class="hero-content">
-                            <h3>Ready for a Cardiac Risk Evaluation?</h3>
-                            <p>Input clinical test parameters, physiological readings, and symptoms to compute the diagnostic probability of cardiovascular disease using our trained ML estimator.</p>
+                            <h3>Explore the Model Demonstration</h3>
+                            <p>Enter sample clinical measurements to see an educational model estimate. This tool is not intended for diagnosis or treatment decisions.</p>
                             <button class="btn btn-primary" onclick="switchTab('assessment')">
                                 <i data-lucide="play-circle"></i>
                                 Start New Assessment
@@ -133,6 +133,7 @@
 
             <!-- Assessment Tab -->
             <section id="assessment-tab" class="tab-content">
+                <p class="medical-disclaimer" role="note"><strong>Educational use only:</strong> This estimate is not a diagnosis or medical advice and is not validated for clinical decisions. Do not enter personally identifying information. If you have health concerns, contact a qualified healthcare professional.</p>
                 <div class="calculator-layout">
                     <!-- Form Card -->
                     <div class="card form-card">
@@ -146,22 +147,22 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="age">Age (years)</label>
-                                    <input type="number" id="age" required min="1" max="120" placeholder="e.g., 52" value="52">
+                                    <input type="number" id="age" name="age" required min="1" max="120" placeholder="e.g., 52" value="52">
                                 </div>
                                 <div class="form-group">
                                     <label for="sex">Biological Sex</label>
-                                    <select id="sex" required>
+                                    <select id="sex" name="sex" required>
                                         <option value="1">Male</option>
                                         <option value="0">Female</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="trestbps">Resting Blood Pressure (mm Hg)</label>
-                                    <input type="number" id="trestbps" required min="80" max="220" placeholder="e.g., 125" value="125">
+                                    <input type="number" id="trestbps" name="trestbps" required min="80" max="220" placeholder="e.g., 125" value="125">
                                 </div>
                                 <div class="form-group">
                                     <label for="chol">Serum Cholesterol (mg/dl)</label>
-                                    <input type="number" id="chol" required min="100" max="600" placeholder="e.g., 212" value="212">
+                                    <input type="number" id="chol" name="chol" required min="100" max="600" placeholder="e.g., 212" value="212">
                                 </div>
                             </div>
 
@@ -169,7 +170,7 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="cp">Chest Pain Type (CP)</label>
-                                    <select id="cp" required>
+                                    <select id="cp" name="cp" required>
                                         <option value="0">Asymptomatic (Type 0)</option>
                                         <option value="1">Typical Angina (Type 1)</option>
                                         <option value="2">Atypical Angina (Type 2)</option>
@@ -178,14 +179,14 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="fbs">Fasting Blood Sugar > 120 mg/dl</label>
-                                    <select id="fbs" required>
+                                    <select id="fbs" name="fbs" required>
                                         <option value="0">No (<= 120 mg/dl)</option>
                                         <option value="1">Yes (> 120 mg/dl)</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="restecg">Resting ECG Results</label>
-                                    <select id="restecg" required>
+                                    <select id="restecg" name="restecg" required>
                                         <option value="0">Normal (0)</option>
                                         <option value="1">ST-T Wave Abnormality (1)</option>
                                         <option value="2">Left Ventricular Hypertrophy (2)</option>
@@ -193,7 +194,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="thalach">Max Heart Rate Achieved (bpm)</label>
-                                    <input type="number" id="thalach" required min="60" max="220" placeholder="e.g., 168" value="168">
+                                    <input type="number" id="thalach" name="thalach" required min="60" max="220" placeholder="e.g., 168" value="168">
                                 </div>
                             </div>
 
@@ -201,18 +202,18 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="exang">Exercise Induced Angina</label>
-                                    <select id="exang" required>
+                                    <select id="exang" name="exang" required>
                                         <option value="0">No</option>
                                         <option value="1">Yes</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="oldpeak">ST Depression (Oldpeak)</label>
-                                    <input type="number" id="oldpeak" step="0.1" required min="0" max="10" placeholder="e.g., 1.0" value="1.0">
+                                    <input type="number" id="oldpeak" name="oldpeak" step="0.1" required min="0" max="10" placeholder="e.g., 1.0" value="1.0">
                                 </div>
                                 <div class="form-group">
                                     <label for="slope">Slope of Peak Exercise ST</label>
-                                    <select id="slope" required>
+                                    <select id="slope" name="slope" required>
                                         <option value="2">Downsloping / Normal (2)</option>
                                         <option value="1">Flat (1)</option>
                                         <option value="0">Upsloping (0)</option>
@@ -220,11 +221,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="ca">Number of Major Vessels (0-4)</label>
-                                    <input type="number" id="ca" required min="0" max="4" placeholder="e.g., 0" value="0">
+                                    <input type="number" id="ca" name="ca" required min="0" max="4" placeholder="e.g., 0" value="0">
                                 </div>
                                 <div class="form-group full-width">
                                     <label for="thal">Thalassemia Type</label>
-                                    <select id="thal" required>
+                                    <select id="thal" name="thal" required>
                                         <option value="2">Normal (2)</option>
                                         <option value="1">Fixed Defect (1)</option>
                                         <option value="3">Reversable Defect (3)</option>
@@ -238,7 +239,7 @@
                                     <i data-lucide="refresh-cw"></i> Reset Form
                                 </button>
                                 <button type="submit" class="btn btn-primary btn-submit">
-                                    <i data-lucide="brain-circuit"></i> Compute Risk Score
+                                    <i data-lucide="brain-circuit"></i> Compute Demo Estimate
                                 </button>
                             </div>
                         </form>
@@ -249,13 +250,13 @@
                         <div class="result-placeholder" id="result-placeholder">
                             <i data-lucide="activity" class="pulse-icon"></i>
                             <h4>Diagnostic Diagnostics Panel</h4>
-                            <p>Fill out the profile and compute target risks to visualize evaluation diagnostics here.</p>
+                            <p>Enter sample values to visualize the model's demo estimate and feature contributions.</p>
                         </div>
 
                         <div class="result-display d-none" id="result-display">
                             <div class="result-header">
                                 <h3>Assessment Result</h3>
-                                <span class="badge" id="risk-badge">Low Risk</span>
+                                <span class="badge" id="risk-badge">No estimate</span>
                             </div>
 
                             <div class="gauge-container">
@@ -292,7 +293,7 @@
             <section id="about-tab" class="tab-content">
                 <div class="card info-card">
                     <h3>ML Model Performance Details</h3>
-                    <p>The prediction module utilizes a Logistic Regression classifier trained on the standardized UCI Cleveland dataset containing patient clinical outcomes.</p>
+                    <p>The prediction module demonstrates a Logistic Regression classifier trained on a standardized heart disease dataset. Its output is for education only and is not clinically validated.</p>
                     
                     <div class="metrics-grid">
                         <div class="metric-box">

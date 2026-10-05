@@ -306,56 +306,56 @@ function displayResults(percent, contributions, inputs) {
     if (percent < 30) {
 
         if (riskBadge) {
-            riskBadge.textContent = "Low Risk";
+            riskBadge.textContent = "Lower estimate";
             riskBadge.className = "badge bg-success";
         }
 
         if (interpretationTitle) {
             interpretationTitle.textContent =
-                "Low Risk Assessment";
+                "Lower Model Estimate";
             interpretationTitle.style.color = "";
         }
 
         if (interpretationText) {
             interpretationText.textContent =
-                "The assessment indicates a relatively low estimated risk based on the provided health information.";
+                "This demo produced a lower model estimate. It cannot rule out heart disease or replace advice from a healthcare professional.";
         }
 
     } else if (percent < 60) {
 
         if (riskBadge) {
-            riskBadge.textContent = "Moderate Risk";
+            riskBadge.textContent = "Moderate estimate";
             riskBadge.className =
                 "badge bg-warning text-dark";
         }
 
         if (interpretationTitle) {
             interpretationTitle.textContent =
-                "Moderate Risk Assessment";
+                "Moderate Model Estimate";
             interpretationTitle.style.color = "";
         }
 
         if (interpretationText) {
             interpretationText.textContent =
-                "The assessment indicates a moderate estimated risk. Consider discussing these results and relevant risk factors with a healthcare professional.";
+                "This demo produced a moderate model estimate. It is not a diagnosis; discuss health concerns with a healthcare professional.";
         }
 
     } else {
 
         if (riskBadge) {
-            riskBadge.textContent = "High Risk";
+            riskBadge.textContent = "Higher estimate";
             riskBadge.className = "badge bg-danger";
         }
 
         if (interpretationTitle) {
             interpretationTitle.textContent =
-                "Higher Risk Assessment";
+                "Higher Model Estimate";
             interpretationTitle.style.color = "";
         }
 
         if (interpretationText) {
             interpretationText.textContent =
-                "The assessment indicates a higher estimated risk based on the provided information. Professional medical evaluation is recommended.";
+                "This demo produced a higher model estimate. It is not a diagnosis; discuss health concerns with a healthcare professional.";
         }
     }
 

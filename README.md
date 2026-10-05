@@ -1,6 +1,8 @@
 # CardioAI - Heart Disease Classifier (ML)
 
-CardioAI is an interactive machine learning dashboard that predicts heart disease probability based on clinical measurements using Logistic Regression trained on the UCI Heart Disease Dataset.
+CardioAI is an interactive educational dashboard that demonstrates a Logistic Regression model using measurements from the UCI Heart Disease Dataset.
+
+> **Important:** This project is a learning demonstration, not a medical device or clinical decision-support tool. Its estimates are not validated for diagnosis or treatment. Do not use them to make health decisions or enter personally identifying information. When the API is unavailable, the dashboard uses a simple heuristic fallback rather than the trained model.
 
 <img width="583" height="413" alt="image" src="https://github.com/user-attachments/assets/d894333b-2fd4-4aa1-9d84-1ad30e622bd9" />
 
@@ -16,36 +18,50 @@ CardioAI is an interactive machine learning dashboard that predicts heart diseas
 
 ## Architecture
 
-- **`train.py`**: A Python ML pipeline script. It downloads the UCI Cleveland dataset, handles preprocessing with standard scaling, trains a Scikit-Learn `LogisticRegression` classifier, evaluates the performance metrics, and exports normalized parameters to `model_assets.json`.
-- **`index.html` / `style.css` / `app.js`**: A modern, high-fidelity responsive dashboard. The JS client handles step-by-step form input, applies exact z-score feature standardization, performs inference locally in the browser, and renders factor contribution charts using Chart.js.
+- **`train.py`**: A Python ML pipeline script. It downloads the heart dataset, handles preprocessing with standard scaling, trains a Scikit-Learn `LogisticRegression` classifier, evaluates the performance metrics, and exports normalized parameters to `model_assets.json`.
+- **`main.py`**: A FastAPI inference API that validates submitted measurements and returns model estimates and feature contributions.
+- **`index.html` / `style.css` / `app.js`**: A responsive dashboard that calls the local API when available, uses a simple heuristic fallback otherwise, and renders factor contribution charts using Chart.js.
 
 ## Performance Metrics
 
-- **Accuracy**: ~80.3%
-- **ROC AUC**: ~0.869
-- **Recall (Sensitivity)**: ~90.9%
-- **F1 Score**: ~83.3%
+The displayed metrics are from a single train/test split and are included for demonstration only. They do not establish clinical performance or generalization to other populations.
 
 ## Setup and Run
 
 ### 1. Requirements
 
-Make sure Python 3 is installed along with the required libraries:
+Make sure Python 3 is installed, then install the project and test dependencies:
 
 ```bash
-pip install pandas numpy scikit-learn
+pip install -r requirements.txt
 ```
 
-### 2. Run Model Training (Optional)
+### 2. Run the API
 
-To retrain the ML model and update the weights:
+Start the FastAPI inference service:
+
+```bash
+uvicorn main:app --reload
+```
+
+The API runs at `http://127.0.0.1:8000`. The dashboard uses a simple heuristic fallback if the API is unavailable.
+
+### 3. Run Model Training (Optional)
+
+To retrain the model and update the weights:
 
 ```bash
 python train.py
 ```
 
-This updates `model_assets.json` with the latest model parameters.
+This downloads the dataset if needed and updates `model_assets.json`.
 
-### 3. Open the Dashboard
+### 4. Open the Dashboard
 
-Simply open `index.html` in any web browser to run assessments immediately without needing a server.
+Open `index.html` in a web browser. The API is optional because the dashboard provides a heuristic fallback, which is not a model prediction.
+
+### Run Tests
+
+```bash
+python -m pytest
+```
