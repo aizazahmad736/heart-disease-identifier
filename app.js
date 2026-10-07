@@ -87,24 +87,69 @@ async function checkBackendConnection() {
 // ============================================================
 
 function setupNavigation() {
-    const navLinks = document.querySelectorAll("[data-section]");
+    const navLinks = document.querySelectorAll(".nav-item");
 
     navLinks.forEach(link => {
-        link.addEventListener("click", function () {
-            const target = this.getAttribute("data-section");
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            const target = this.hash.slice(1);
 
             if (!target) return;
 
-            document.querySelectorAll("section").forEach(section => {
-                section.classList.remove("active");
-            });
-
-            const targetSection = document.getElementById(target);
-
-            if (targetSection) {
-                targetSection.classList.add("active");
-            }
+            switchTab(target);
         });
+    });
+}
+
+function switchTab(sectionName) {
+    const targetSection = document.getElementById(`${sectionName}-tab`);
+
+    if (!targetSection) {
+        console.error(`Navigation target not found: ${sectionName}`);
+        return;
+    }
+
+    document.querySelectorAll(".tab-content").forEach(section => {
+        section.classList.toggle("active", section === targetSection);
+    });
+
+    document.querySelectorAll(".nav-item").forEach(link => {
+        link.classList.toggle("active", link.hash === `#${sectionName}`);
+    });
+}
+
+
+// ============================================================
+// SYNTHETIC DEMO PROFILE
+// ============================================================
+
+function loadSampleProfile() {
+    const form = document.getElementById("risk-form");
+
+    if (!form) {
+        console.error("Risk form not found.");
+        return;
+    }
+
+    const sampleProfile = {
+        age: 52,
+        sex: 1,
+        cp: 2,
+        trestbps: 125,
+        chol: 212,
+        fbs: 0,
+        restecg: 0,
+        thalach: 168,
+        exang: 0,
+        oldpeak: 1.0,
+        slope: 2,
+        ca: 0,
+        thal: 2
+    };
+
+    Object.entries(sampleProfile).forEach(([name, value]) => {
+        const field = form.elements.namedItem(name);
+        if (field) field.value = value;
     });
 }
 
@@ -138,38 +183,41 @@ async function calculateRisk(e) {
 
     try {
         let result;
+        let source;
+        let response;
 
         try {
-            const response = await fetch(`${BACKEND_URL}/predict`, {
+            response = await fetch(`${BACKEND_URL}/predict`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(inputs)
             });
+        } catch (backendError) {
+            console.warn(
+                "Prediction API is unavailable; using the local heuristic demo:",
+                backendError
+            );
+            result = generateFallbackPrediction(inputs);
+            source = "fallback";
+        }
 
+        if (response) {
             if (!response.ok) {
-                throw new Error("Backend prediction failed.");
+                throw new Error(
+                    `Prediction API returned HTTP ${response.status}.`
+                );
             }
 
             result = await response.json();
-
-        } catch (backendError) {
-            console.warn(
-                "Using local fallback prediction:",
-                backendError
-            );
-
-            result = generateFallbackPrediction(inputs);
+            source = "model";
         }
 
         const percent = extractRiskPercentage(result);
+        const contributions = result.contributions || [];
 
-        const contributions =
-            result.contributions ||
-            generateFallbackContributions(inputs);
-
-        displayResults(percent, contributions, inputs);
+        displayResults(percent, contributions, inputs, source);
 
     } catch (error) {
         console.error("Prediction error:", error);
@@ -216,28 +264,6 @@ function generateFallbackPrediction(inputs) {
 
 
 // ============================================================
-// FALLBACK FEATURE CONTRIBUTIONS
-// ============================================================
-
-function generateFallbackContributions(inputs) {
-    const contributions = [];
-
-    Object.keys(inputs).forEach(key => {
-        const value = Number(inputs[key]);
-
-        if (!isNaN(value)) {
-            contributions.push({
-                feature: key,
-                contribution: Math.abs(value)
-            });
-        }
-    });
-
-    return contributions;
-}
-
-
-// ============================================================
 // EXTRACT RISK PERCENTAGE
 // ============================================================
 
@@ -265,7 +291,7 @@ function extractRiskPercentage(result) {
 // DISPLAY RESULTS
 // ============================================================
 
-function displayResults(percent, contributions, inputs) {
+function displayResults(percent, contributions, inputs, source) {
     const placeholder =
         document.getElementById("result-placeholder");
 
@@ -278,6 +304,14 @@ function displayResults(percent, contributions, inputs) {
 
     if (resultDisplay) {
         resultDisplay.classList.remove("d-none");
+    }
+
+    const estimateSource = document.getElementById("estimate-source");
+    if (estimateSource) {
+        estimateSource.textContent = source === "model"
+            ? "Source: trained model API"
+            : "Source: local heuristic fallback — not a trained-model result";
+        estimateSource.dataset.source = source;
     }
 
     const riskPercentage =
@@ -359,7 +393,7 @@ function displayResults(percent, contributions, inputs) {
         }
     }
 
-    renderContributionChart(contributions);
+    renderContributionChart(contributions, source);
 
     saveAssessmentSession(percent, inputs);
 }
@@ -369,8 +403,15 @@ function displayResults(percent, contributions, inputs) {
 // CONTRIBUTION CHART
 // ============================================================
 
-function renderContributionChart(contributions) {
+function renderContributionChart(contributions, source) {
     const canvas = document.getElementById("featureChart");
+
+    const note = document.getElementById("contribution-note");
+    if (note) {
+        note.textContent = source === "model"
+            ? "Signed contributions show how each input moves the model score; they are not clinical explanations."
+            : "Feature contributions are unavailable for the local heuristic estimate.";
+    }
 
     if (!canvas || typeof Chart === "undefined") {
         return;
@@ -383,32 +424,26 @@ function renderContributionChart(contributions) {
         featureChart = null;
     }
 
-    if (!Array.isArray(contributions) ||
+    if (source !== "model" || !Array.isArray(contributions) ||
         contributions.length === 0) {
         return;
     }
 
-    const sortedContributions = [...contributions]
-        .sort((a, b) => {
-            return (
-                Math.abs(Number(b.contribution || 0)) -
-                Math.abs(Number(a.contribution || 0))
-            );
+    const sortedContributions = contributions
+        .map(item => {
+            const name = item.feature || item.name || "Feature";
+            const value = Number(item.contribution ?? item.value);
+            return {
+                label: FEATURE_LABELS[name] || name,
+                value
+            };
         })
+        .filter(item => Number.isFinite(item.value))
+        .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
         .slice(0, 10);
 
-    const labels = sortedContributions.map(item => {
-        const feature =
-            item.feature ||
-            item.name ||
-            "Feature";
-
-        return FEATURE_LABELS[feature] || feature;
-    });
-
-    const values = sortedContributions.map(item => {
-        return Math.abs(Number(item.contribution || 0));
-    });
+    const labels = sortedContributions.map(item => item.label);
+    const values = sortedContributions.map(item => item.value);
 
     featureChart = new Chart(ctx, {
         type: "bar",
@@ -418,9 +453,14 @@ function renderContributionChart(contributions) {
 
             datasets: [
                 {
-                    label: "Feature Contribution",
+                    label: "Contribution to model score",
                     data: values,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: values.map(value =>
+                        value >= 0
+                            ? "rgba(255, 51, 102, 0.7)"
+                            : "rgba(0, 230, 118, 0.7)"
+                    )
                 }
             ]
         },
@@ -437,7 +477,11 @@ function renderContributionChart(contributions) {
 
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: "Contribution (log-odds)"
+                    }
                 }
             }
         }
