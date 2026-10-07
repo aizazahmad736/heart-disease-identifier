@@ -141,6 +141,12 @@
                             <h3>Patient Clinical Profile</h3>
                             <span class="step-indicator">Complete all fields</span>
                         </div>
+                        <div class="sample-profile-actions">
+                            <button type="button" class="btn btn-secondary" onclick="loadSampleProfile()">
+                                <i data-lucide="flask-conical"></i> Load synthetic sample
+                            </button>
+                            <span>Fictional example values for demonstration only.</span>
+                        </div>
                         
                         <form id="risk-form" onsubmit="calculateRisk(event)">
                             <div class="form-section-title">1. Patient Demographics & Vitals</div>
@@ -258,6 +264,7 @@
                                 <h3>Assessment Result</h3>
                                 <span class="badge" id="risk-badge">No estimate</span>
                             </div>
+                            <p class="estimate-source" id="estimate-source" role="status"></p>
 
                             <div class="gauge-container">
                                 <div class="percentage-display">
@@ -274,7 +281,8 @@
                                 <p id="interpretation-text">Clinical indicators suggest a low likelihood of coronary artery disease. Continue regular health screenings.</p>
                             </div>
 
-                            <div class="visualization-title">Feature Contribution Analysis</div>
+                            <div class="visualization-title">Model Feature Contributions</div>
+                            <p class="chart-note" id="contribution-note" role="note"></p>
                             <div class="chart-container">
                                 <canvas id="featureChart"></canvas>
                             </div>
