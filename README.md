@@ -22,6 +22,8 @@ CardioAI is an interactive educational dashboard that demonstrates a Logistic Re
 - **`main.py`**: A FastAPI inference API that validates submitted measurements and returns model estimates and feature contributions.
 - **`index.html` / `style.css` / `app.js`**: A responsive dashboard that calls the local API when available, uses a simple heuristic fallback otherwise, and renders factor contribution charts using Chart.js.
 
+The dashboard labels whether an estimate came from the trained API or the local heuristic. The heuristic is used only when the API cannot be reached; API errors are shown instead of being replaced with a fallback estimate. Feature contribution charts are shown only for trained-model responses. Use **Load synthetic sample** to fill the form with fictional example values.
+
 ## Performance Metrics
 
 The displayed metrics are from a single train/test split and are included for demonstration only. They do not establish clinical performance or generalization to other populations.
